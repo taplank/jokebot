@@ -7,63 +7,83 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <header>
-    <h1>Human vs LLM Joke Arena</h1>
-    <nav>
-      <button id="nav-submit">Submit a Joke</button>
-      <button id="nav-vote">Vote on Jokes</button>
-      <button id="nav-results">Results</button>
-    </nav>
-  </header>
+<header>
+  <h1>Human vs LLM Joke Arena</h1>
+  <nav>
+    <button id="nav-submit">Submit a Joke</button>
+    <button id="nav-vote">Vote on Jokes</button>
+    <button id="nav-results">Results</button>
+    <button id="nav-admin">Admin</button>
+  </nav>
+</header>
 
-  <main>
-    <!-- Submit view -->
-    <section id="view-submit" class="view">
-      <h2>Submit a Joke</h2>
-      <p>Pick a prompt and write your best joke. The LLM will write its own, and people will vote.</p>
-      <form id="submit-form">
-        <label>
-          Prompt:
-          <input type="text" id="prompt-input" required placeholder="e.g. A joke about math homework" />
-        </label>
-        <label>
-          Your joke:
-          <textarea id="joke-input" rows="4" required placeholder="Write your joke here"></textarea>
-        </label>
-        <button type="submit">Submit &amp; Create Battle</button>
-      </form>
-      <p id="submit-message" class="message"></p>
-    </section>
+<main>
+  <!-- Submit -->
+  <section id="view-submit" class="view">
+    <h2>Submit a Joke Answer</h2>
+    <p>We give you a question. You answer. Gemini and Qwen also answer. Later, people vote which joke is funnier.</p>
 
-    <!-- Vote view -->
-    <section id="view-vote" class="view hidden">
-      <h2>Vote: Which Joke is Funnier?</h2>
-      <div id="vote-area">
-        <p>Loading a battle...</p>
-      </div>
-      <p id="vote-message" class="message"></p>
-      <button id="next-battle-btn" class="hidden">Next Battle</button>
-    </section>
+    <div id="submit-question-box">
+      <button id="load-question-btn">Get a Question</button>
+      <p id="current-question" class="question-text"></p>
+    </div>
 
-    <!-- Results view -->
-    <section id="view-results" class="view hidden">
-      <h2>Results</h2>
-      <div id="results-area">
-        <p>Loading results...</p>
-      </div>
-      <button id="refresh-results-btn">Refresh Results</button>
-    </section>
-  </main>
+    <form id="submit-answer-form">
+      <input type="hidden" id="question-id" />
 
-  <footer>
-    <p>
-      Open-source on
-      <a href="https://github.com/" target="_blank" rel="noopener noreferrer">
-        GitHub
-      </a>.
+      <label>
+        Your one-letter username (optional, for reveal):
+        <input type="text" id="username-input" maxlength="1" />
+      </label>
+
+      <label>
+        Your joke answer:
+        <textarea id="answer-input" rows="4" required placeholder="Write your joke here"></textarea>
+      </label>
+
+      <button type="submit">Submit Answer &amp; Spawn Battle</button>
+    </form>
+
+    <p id="submit-message" class="message"></p>
+  </section>
+
+  <!-- Vote -->
+  <section id="view-vote" class="view hidden">
+    <h2>Vote: Which Joke is Funnier?</h2>
+    <p id="vote-question" class="question-text"></p>
+    <div id="vote-area"><p>Loading a battle...</p></div>
+    <p id="vote-message" class="message"></p>
+    <div id="reveal-box" class="hidden reveal-box"></div>
+    <button id="next-battle-btn" class="hidden">Next Battle</button>
+  </section>
+
+  <!-- Results -->
+  <section id="view-results" class="view hidden">
+    <h2>Results</h2>
+    <div id="results-area"><p>Loading results...</p></div>
+    <button id="refresh-results-btn">Refresh Results</button>
+  </section>
+
+  <!-- Admin -->
+  <section id="view-admin" class="view hidden">
+    <h2>Admin: Strategy Stats</h2>
+    <p class="subtext">
+      This shows how often each AI strategy (Gemini vs Qwen) is chosen and how often it wins.
     </p>
-  </footer>
+    <div id="admin-strategy-area"><p>Loading strategy stats...</p></div>
+    <button id="refresh-admin-btn">Refresh Admin Stats</button>
+  </section>
+</main>
 
-  <script src="/app.js"></script>
+<footer>
+  <p>
+    Open-source on
+    <a href="https://github.com/taplank/jokebot" target="_blank" rel="noopener noreferrer">
+      GitHub
+    </a>.
+  </p>
+</footer>
+
+<script src="/app.js"></script>
 </body>
 </html>

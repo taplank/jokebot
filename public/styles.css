@@ -7,7 +7,7 @@ body {
   margin: 0;
   padding: 0;
   background: #f5f5f7;
-  color: #222;
+  color: #111827;
 }
 
 header {
@@ -17,13 +17,13 @@ header {
 }
 
 header h1 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.5rem;
+  margin: 0 0 0.5rem;
+  font-size: 1.6rem;
 }
 
 header nav button {
   margin-right: 0.5rem;
-  padding: 0.4rem 0.8rem;
+  padding: 0.4rem 0.9rem;
   border-radius: 999px;
   border: none;
   cursor: pointer;
@@ -35,7 +35,7 @@ header nav button:hover {
 }
 
 main {
-  max-width: 800px;
+  max-width: 900px;
   margin: 1.5rem auto;
   padding: 0 1rem 2rem;
 }
@@ -78,6 +78,11 @@ button:hover {
   color: #111827;
 }
 
+.question-text {
+  font-weight: 600;
+  margin: 0.5rem 0 1rem;
+}
+
 #vote-area {
   display: grid;
   gap: 1rem;
@@ -88,7 +93,7 @@ button:hover {
   border-radius: 0.75rem;
   padding: 1rem;
   border: 1px solid #e5e7eb;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .joke-card h3 {
@@ -99,21 +104,13 @@ button:hover {
   white-space: pre-wrap;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 0.5rem;
-}
-
-th, td {
+.reveal-box {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
   border: 1px solid #e5e7eb;
-  padding: 0.4rem 0.6rem;
-  font-size: 0.9rem;
-}
-
-th {
   background: #f3f4f6;
-  text-align: left;
+  font-size: 0.9rem;
 }
 
 footer {

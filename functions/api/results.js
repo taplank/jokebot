@@ -1,77 +1,46 @@
 // GET /api/results
-// Returns:
-// {
-//   total_votes: number,
-//   human_win_rate: number,
-//   per_prompt: [{ prompt, human_win_rate, vote_count }]
-// }
+// -> { total_votes, human_win_rate, gemini_win_rate, qwen_win_rate }
 
 export async function onRequestGet(context) {
   const { env } = context;
   const db = env.DB;
 
   try {
-    // Overall stats
-    const aggResult = await db
+    const res = await db
       .prepare(
-        `SELECT 
+        `SELECT
            COUNT(*) AS total_votes,
-           SUM(human_is_winner) AS human_wins
-         FROM votes`
+           SUM(CASE WHEN a.source = 'human' THEN 1 ELSE 0 END) AS human_wins,
+           SUM(CASE WHEN a.source = 'gemini' THEN 1 ELSE 0 END) AS gemini_wins,
+           SUM(CASE WHEN a.source = 'qwen' THEN 1 ELSE 0 END) AS qwen_wins
+         FROM votes v
+         JOIN answers a ON v.winner_answer_id = a.id`,
       )
       .all();
 
-    const aggRow = aggResult.results?.[0] || {
+    const row = res.results?.[0] || {
       total_votes: 0,
       human_wins: 0,
+      gemini_wins: 0,
+      qwen_wins: 0,
     };
-    const totalVotes = aggRow.total_votes || 0;
-    const humanWins = aggRow.human_wins || 0;
 
-    let humanWinRate = 0;
-    if (totalVotes > 0) {
-      humanWinRate = (humanWins * 100.0) / totalVotes;
-    }
+    const total = row.total_votes || 0;
+    const rate = (wins) => (total > 0 ? (wins * 100.0) / total : 0);
 
-    // Per-prompt stats
-    const perPromptResult = await db
-      .prepare(
-        `SELECT 
-           j.prompt AS prompt,
-           COUNT(v.id) AS vote_count,
-           SUM(v.human_is_winner) AS human_wins
-         FROM votes v
-         JOIN battles b ON v.battle_id = b.id
-         JOIN jokes j ON b.human_joke_id = j.id
-         GROUP BY j.prompt
-         ORDER BY vote_count DESC
-         LIMIT 50`
-      )
-      .all();
-
-    const perPrompt = (perPromptResult.results || []).map((row) => {
-      const votes = row.vote_count || 0;
-      const wins = row.human_wins || 0;
-      const rate = votes > 0 ? (wins * 100.0) / votes : 0;
-      return {
-        prompt: row.prompt,
-        vote_count: votes,
-        human_win_rate: rate,
-      };
-    });
-
-    return jsonResponse({
-      total_votes: totalVotes,
-      human_win_rate: humanWinRate,
-      per_prompt: perPrompt,
+    return json({
+      total_votes: total,
+      human_win_rate: rate(row.human_wins || 0),
+      gemini_win_rate: rate(row.gemini_wins || 0),
+      qwen_win_rate: rate(row.qwen_wins || 0),
     });
   } catch (err) {
     console.error("results error", err);
-    return jsonResponse({ error: "Internal error" }, 500);
+    return json({ error: "Internal error" }, 500);
   }
 }
 
-function jsonResponse(data, status = 200) {
+function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
     headers: { "Content-Type": "application/json" },

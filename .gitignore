@@ -1,0 +1,21 @@
+# Node / JS
+node_modules/
+dist/
+.build/
+
+# Mac
+.DS_Store
+
+# Env / secrets
+.env
+.env.*
+*.local
+
+# Cloudflare
+.wrangler/
+
+# Python venvs etc
+__pycache__/
+*.pyc
+venv/
+*.venv/

@@ -1,0 +1,7 @@
+name = "joke-arena"
+compatibility_date = "2024-12-01"
+
+[[d1_databases]]
+binding = "DB"                     # used as env.DB in functions
+database_name = "jokebot-db"       # your D1 DB name
+database_id = "317913ec-9838-4501-9aa1-af0a6adf1096"
