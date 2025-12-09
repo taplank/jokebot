@@ -1,0 +1,37 @@
+-- Core tables
+
+CREATE TABLE IF NOT EXISTS questions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  text TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS answers (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  question_id INTEGER NOT NULL,
+  text TEXT NOT NULL,
+  source TEXT NOT NULL,       -- 'human', 'gemini', 'qwen'
+  user_name TEXT,             -- optional one-letter username
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS battles (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  question_id INTEGER NOT NULL,
+  answer_a_id INTEGER NOT NULL,
+  answer_b_id INTEGER NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS votes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  battle_id INTEGER NOT NULL,
+  winner_answer_id INTEGER NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS strategy_stats (
+  strategy TEXT PRIMARY KEY,  -- e.g. 'gemini', 'qwen'
+  wins INTEGER NOT NULL DEFAULT 0,
+  uses INTEGER NOT NULL DEFAULT 0
+);
